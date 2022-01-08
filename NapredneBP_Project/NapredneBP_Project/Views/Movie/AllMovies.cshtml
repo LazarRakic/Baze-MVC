@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Movie>
+
+
+@{ ViewData["Title"] = "All Movies";
+}
+<h1>All Movies</h1>
+
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Publishing Date
+            </th>
+            <th>
+                Description
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td width="30%">
+                    @obj.Title
+                </td>
+                <td width="30%">
+                    @obj.PublishingDate
+                </td>
+                <td width="100%">
+                    @obj.Description
+                </td>
+            </tr>
+        }
+    </tbody>
+

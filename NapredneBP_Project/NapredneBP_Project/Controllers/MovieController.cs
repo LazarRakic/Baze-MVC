@@ -8,15 +8,24 @@ using System.Threading.Tasks;
 
 namespace NapredneBP_Project.Controllers
 {
-    [Route("Movie")]
-    [ApiController]
+    
     public class MovieController : Controller
     {
-        public IActionResult Index()
+        private readonly IGraphClient _client;
+        //ovde vrati sve filmove
+        public async Task<IActionResult> Index()
         {
+            
             return View();
         }
-        private readonly IGraphClient _client;
+        public async Task<IActionResult> AllMovies()
+        {
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                            .Return(m => m.As<Movie>()).ResultsAsync;
+            IEnumerable<Movie> ListofMovies = movies;
+            return View(ListofMovies);
+        }
+        
 
         public MovieController(IGraphClient client)
         {
@@ -50,7 +59,7 @@ namespace NapredneBP_Project.Controllers
         [Route("GetAllMovies")]
         public async Task<IActionResult> GetAllMovies()
         {
-            var movies = await _client.Cypher.Match("(m:Movie)")
+            IEnumerable<Movie> movies = await _client.Cypher.Match("(m:Movie)")
                                             .Return(m => m.As<Movie>()).ResultsAsync;
             return Ok(movies);
             
