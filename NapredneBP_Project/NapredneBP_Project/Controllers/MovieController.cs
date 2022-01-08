@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NapredneBP_Project.Controllers
 {
-    [Route("[controller]")]
+    [Route("Movie")]
     [ApiController]
     public class MovieController : Controller
     {
@@ -53,6 +53,7 @@ namespace NapredneBP_Project.Controllers
             var movies = await _client.Cypher.Match("(m:Movie)")
                                             .Return(m => m.As<Movie>()).ResultsAsync;
             return Ok(movies);
+            
         }
 
         [HttpGet]
@@ -67,7 +68,7 @@ namespace NapredneBP_Project.Controllers
             {
                 a = item.film;
             }
-            return View("Index", a);
+            return View(a);
 
             //return Ok(movie);
         }
@@ -78,8 +79,15 @@ namespace NapredneBP_Project.Controllers
         {
             var movie = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Title == title)
-                                            .Return(m => m.As<Movie>()).ResultsAsync;
+                                            .Return(m =>new Movie{ 
+                                                Title=m.As<Movie>().Title,
+                                                PublishingDate=m.As<Movie>().PublishingDate
+
+                                            }).ResultsAsync;
             return Ok(movie);
+            
+            
+            
         }
 
         [HttpGet]

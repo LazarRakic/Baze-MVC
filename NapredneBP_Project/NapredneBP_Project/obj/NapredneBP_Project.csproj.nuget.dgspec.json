@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lazar\\source\\repos\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj": {}
+    "C:\\Users\\Lazar\\Desktop\\MVC-Baze\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lazar\\source\\repos\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj": {
+    "C:\\Users\\Lazar\\Desktop\\MVC-Baze\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lazar\\source\\repos\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+        "projectUniqueName": "C:\\Users\\Lazar\\Desktop\\MVC-Baze\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
         "projectName": "NapredneBP_Project",
-        "projectPath": "C:\\Users\\Lazar\\source\\repos\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+        "projectPath": "C:\\Users\\Lazar\\Desktop\\MVC-Baze\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
         "packagesPath": "C:\\Users\\Lazar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lazar\\source\\repos\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
+        "outputPath": "C:\\Users\\Lazar\\Desktop\\MVC-Baze\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

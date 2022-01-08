@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NapredneBP_Project.Models;
+using Neo4jClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,11 +12,11 @@ namespace NapredneBP_Project.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IGraphClient _client;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IGraphClient client)
         {
-            _logger = logger;
+            _client = client;
         }
 
         public IActionResult Index()
