@@ -1,0 +1,14 @@
+﻿@model NapredneBP_Project.Models.Movie
+
+@using (Html.BeginForm("GetMovieByTitle", "Movie"))
+{
+    <div class="form-group">
+        <input asp-for="@Model.Title" placeholder="Search"/>
+        <span asp-validation-for="@Model.Title"></span>
+
+        @Html.AntiForgeryToken()
+        <button class="btn btn-primary" type="submit">Search movie</button>
+    </div>
+}
+
+@*Ne posalje objekat, zeza ga ASCII encoding, a nije do toga sto objekat ima samo Title, slicno se salje i za CreateMovie*@

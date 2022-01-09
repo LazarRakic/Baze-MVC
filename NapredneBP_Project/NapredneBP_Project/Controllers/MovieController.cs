@@ -13,14 +13,16 @@ namespace NapredneBP_Project.Controllers
     {
         private readonly IGraphClient _client;
         //ovde vrati sve filmove
-        public async Task<IActionResult> Index()
-        {
-            return View("CreateMovie");
-        }
+        
 
         public MovieController(IGraphClient client)
         {
             _client = client;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return View("CreateMovie");
         }
 
         [HttpPost]
@@ -61,8 +63,8 @@ namespace NapredneBP_Project.Controllers
         }
 
         [HttpGet]
-        [Route("GetMoviesById/{id}")]
-        public async Task<IActionResult> GetMoviesById(Guid id)
+        [Route("GetMovieById/{id}")]
+        public async Task<IActionResult> GetMovieById(Guid id)
         {
             var movie = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Id == id)
@@ -77,7 +79,7 @@ namespace NapredneBP_Project.Controllers
 
         [HttpGet]
         [Route("GetMovieByTitle/{title}")]
-        public async Task<IActionResult> GetMovieByTitle(String title)
+        public async Task<IActionResult> GetMovieByTitle(string title)
         {
             var movies = await _client.Cypher.Match("(m:Movie)")
                                              .Where((Movie m) => m.Title == title)
