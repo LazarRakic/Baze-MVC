@@ -5,9 +5,12 @@
 }
 <h1>All Movies</h1>
 
-@*<div class="text-center">
-            <input type="text" id="movieName" placeholder="Search" />
-            <h3>@Html.ActionLink("Search movie by title", "GetMovieByTitle", "Movie", new { title = "Seven" })</h3>
+@*<div class="form-group">
+    <input asp-for="@Model.Title" placeholder="Search" />
+    <span asp-validation-for="@Model.Title"></span>
+
+    @Html.AntiForgeryToken()
+    <button class="btn btn-primary" type="submit">Search movie</button>
 </div>*@
 
 <table class="table table-bordered table-striped" style="width:100%">

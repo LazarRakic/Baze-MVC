@@ -24,6 +24,10 @@ namespace NapredneBP_Project.Controllers
         {
             return View("CreateMovie");
         }
+        public async Task<IActionResult> GMBT()
+        {
+            return View("GetMovieByTitle");
+        }
 
         [HttpPost]
         [Route("CreateMovie")]
@@ -74,11 +78,11 @@ namespace NapredneBP_Project.Controllers
         }
 
         [HttpGet]
-        [Route("GetMovieByTitle/{title}")]
-        public async Task<IActionResult> GetMovieByTitle(string title)
+        [Route("GetMovieByTitle")]
+        public async Task<IActionResult> GetMovieByTitle(Movie movie)
         {
             var movies = await _client.Cypher.Match("(m:Movie)")
-                                             .Where((Movie m) => m.Title == title)
+                                             .Where((Movie m) => m.Title == movie.Title)
                                              .Return(m => m.As<Movie>()).ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
             return View("AllMovies", ListofMovies);
@@ -94,11 +98,11 @@ namespace NapredneBP_Project.Controllers
             return Ok(movie);
         }
 
-        [HttpPut]
-        [Route("AddMovieRate/{id}/{rate}")]
-        public async Task<IActionResult> AddMovieRate(Guid id, double rate)
+        [HttpGet]
+        [Route("AddMovieRate/{id}")]
+        public async Task<IActionResult> AddMovieRate(Guid id,Movie movie)
         {
-            if (rate >= 0 && rate <= 5)
+            if (movie.Rate >= 0 && movie.Rate <= 5)
             {
                 var query = await _client.Cypher.Match("(m:Movie)")
                                                 .Where((Movie m) => m.Id == id)
@@ -111,7 +115,7 @@ namespace NapredneBP_Project.Controllers
                 }
 
                 m.RateCount += 1;
-                m.Rate += rate;
+                m.Rate += movie.Rate;
                 m.Rate = m.Rate / m.RateCount;
 
                 query = await _client.Cypher.Match("(m:Movie)")
@@ -119,8 +123,9 @@ namespace NapredneBP_Project.Controllers
                                                 .Set("m = $movie")
                                                 .WithParam("movie", m)
                                                 .Return((m) => new { movie = m.As<Movie>() }).ResultsAsync;
-                return Ok(query);
+                //return Ok(query);
                 //return View("Index");
+                return RedirectToAction("AllMovies");
             }
             return BadRequest();
         }
