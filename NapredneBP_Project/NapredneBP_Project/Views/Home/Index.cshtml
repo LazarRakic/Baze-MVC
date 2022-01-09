@@ -22,11 +22,15 @@
 <br />
 
 <div class="text-center">
-    <h3>@Html.ActionLink("Show all persons", "GetAllPersons", "Person")</h3>
+    <h3>
+        <a class="nav-link " asp-controller="Person" asp-action="GetAllPersons">Show all persons</a>
+    </h3>
 </div>
 
 <br />
 
 <div class="text-center">
-    <h3>@Html.ActionLink("Create new person", "Index", "Person")</h3>
+    <h3>
+        <a class="nav-link " asp-controller="Person" asp-action="Create">Create new person</a>
+    </h3>
 </div>

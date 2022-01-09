@@ -8,27 +8,31 @@ using System.Threading.Tasks;
 
 namespace NapredneBP_Project.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
     public class PersonController : Controller
     {
         
         private readonly IGraphClient _client;
 
-        public IActionResult Index()
-        {
-            return View();
-        }
         public PersonController(IGraphClient client)
         {
             _client = client;
         }
 
-        [HttpPost]
-        [Route("CreateActor")]
-        public async Task<IActionResult> CreateNodeActor(Person person)
+        public IActionResult Index()
         {
+            return View();
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("CreatePerson")]
+        public async Task<IActionResult> CreatePerson(Person person)
+        {
             Person person_new = new Person()
             {
                 Id = Guid.NewGuid(),
@@ -39,16 +43,64 @@ namespace NapredneBP_Project.Controllers
                                 .WithParam("person", person_new)
                                 .ExecuteWithoutResultsAsync();
 
-            return Ok();
+            return RedirectToAction("GetAllPersons");
         }
+
         [HttpGet]
         [Route("GetAllPersons")]
         public async Task<IActionResult> GetAllPersons()
         {
-
             var persons = await _client.Cypher.Match("(n:Person)").Return(n => n.As<Person>()).ResultsAsync;
-            return Ok(persons);
+            IEnumerable<Person> p = persons;
+            return View(p);
         }
+
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var person = await _client.Cypher.Match("(n:Person)")
+                                            .Where((Movie n) => n.Id == id)
+                                            .Return(n => n.As<Person>()).ResultsAsync;
+            Person per = person.First();
+            return View(per);
+        }
+
+        [HttpPost]
+        [Route("UpdatePerson")]
+        public async Task<IActionResult> UpdatePerson(Person per)
+        {
+            await _client.Cypher.Match("(p:Person)").Where((Person p) => p.Id == per.Id)
+                                .Set("p=$person")
+                                .WithParam("person", per)
+                                .ExecuteWithoutResultsAsync();
+            return RedirectToAction("GetAllPersons");
+        }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var person = await _client.Cypher.Match("(p:Person)")
+                                            .Where((Person p) => p.Id == id)
+                                            .Return(p => p.As<Person>()).ResultsAsync;
+            Person per = person.First();
+            return View(per);
+        }
+
+        [HttpPost]
+        [Route("DeletePerson")]
+        public async Task<IActionResult> DeletePerson(Person per)
+        {
+            await _client.Cypher.Match("(p:Person)")
+                                .Where((Person p) => p.Id == per.Id)
+                                .Delete("p")
+                                .ExecuteWithoutResultsAsync();
+
+            return RedirectToAction("GetAllPersons");
+        }
+
+
+
+
+
+
 
         [HttpGet]
         [Route("GetProperty/{id}")]
@@ -58,6 +110,7 @@ namespace NapredneBP_Project.Controllers
             var person = await _client.Cypher.Match("(p:Person)").Where((Person p) => p.Id == id).Return(p => p.As<Person>().Name).ResultsAsync;
             return Ok(person);
         }
+
         [HttpGet]
         [Route("GetPersonsById/{id}")]
         public async Task<IActionResult> GetPersonById(Guid id)
