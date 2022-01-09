@@ -45,11 +45,7 @@ namespace NapredneBP_Project.Controllers
                                 .WithParam("movie", movieNew)
                                 .ExecuteWithoutResultsAsync();
 
-            var movies = await _client.Cypher.Match("(m:Movie)")
-                                            .Return(m => m.As<Movie>()).ResultsAsync;
-            IEnumerable<Movie> ListofMovies = movies;
-
-            return View("AllMovies", ListofMovies);
+            return RedirectToAction("AllMovies");
         }
 
         [HttpGet]
@@ -74,7 +70,7 @@ namespace NapredneBP_Project.Controllers
             {
                 a = item.film;
             }
-            return View(a);
+            return View("Details",a);
         }
 
         [HttpGet]
@@ -124,11 +120,12 @@ namespace NapredneBP_Project.Controllers
                                                 .WithParam("movie", m)
                                                 .Return((m) => new { movie = m.As<Movie>() }).ResultsAsync;
                 return Ok(query);
+                //return View("Index");
             }
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpGet]
         [Route("DeleteMovieById/{id}")]
         public async Task<IActionResult> DeleteMovieById(Guid id)
         {
@@ -137,7 +134,7 @@ namespace NapredneBP_Project.Controllers
                                 .Delete("m")
                                 .ExecuteWithoutResultsAsync();
 
-            return Ok();
+            return RedirectToAction("AllMovies");
         }
     }
 }
