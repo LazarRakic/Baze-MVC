@@ -70,8 +70,8 @@ namespace NapredneBP_Project.Controllers
             /*var movie = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Id == id)
                                             .Return((m) => new { 
-                                                film = m.As<Movie>(),
-                                                actors=m.As<Person>()
+                                                film = m.As<Movie>()
+                                                
                                             }).ResultsAsync;*/
 
             var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
@@ -81,12 +81,40 @@ namespace NapredneBP_Project.Controllers
                                                  actors=p.CollectAs<Person>()
                                              }
                                              ).ResultsAsync;
+            
             Movie a = new Movie();
             foreach (var item in movie1)
             {
-                a = item.film;
-                a.ListOfActors = item.actors;
+                
+                
+                    a = item.film;
+
+                    a.ListOfActors = item.actors;
+                
                
+            }
+            if(a.ListOfActors==null)
+            {
+                var movie = await _client.Cypher.Match("(m:Movie)")
+                                            .Where((Movie m) => m.Id == id)
+                                            .Return((m) => new {
+                                                film = m.As<Movie>()
+
+                                            }).ResultsAsync;
+
+                
+                foreach (var item in movie)
+                {
+
+
+                    a = item.film;
+
+                    
+
+
+                }
+
+
             }
             return View("Details",a);
         }

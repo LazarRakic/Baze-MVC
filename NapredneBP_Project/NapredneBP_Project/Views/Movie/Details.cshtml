@@ -45,9 +45,12 @@
                 <h3>Actors</h3>
                 <br />
                 <ul>
-                    @foreach (var obj in Model.ListOfActors)
+                    @if (Model.ListOfActors != null)
                     {
-                    <li>@obj.Name</li>
+                        @foreach (var obj in Model.ListOfActors)
+                        { 
+                          <li>@obj.Name</li>
+                        }
                     }
                 </ul>
             </div>
