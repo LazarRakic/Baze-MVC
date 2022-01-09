@@ -5,6 +5,11 @@
 }
 <h1>All Movies</h1>
 
+<div class="text-center">
+    <input type="text" id="movieName" placeholder="Search" />
+    <h3>@Html.ActionLink("Search movie by title", "GetMovieByTitle", "Movie", new { title = "Seven" })</h3>
+</div>
+
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>
@@ -17,11 +22,13 @@
             <th>
                 Description
             </th>
-
+            <th>
+                Rate
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var obj in Model)
+       @foreach (var obj in Model)
         {
             <tr>
                 <td width="30%">
@@ -33,7 +40,10 @@
                 <td width="100%">
                     @obj.Description
                 </td>
+                <td width="100%">
+                    @obj.Rate
+                </td>
             </tr>
         }
     </tbody>
-
+</table>

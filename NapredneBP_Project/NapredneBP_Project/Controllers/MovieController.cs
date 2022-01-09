@@ -15,17 +15,8 @@ namespace NapredneBP_Project.Controllers
         //ovde vrati sve filmove
         public async Task<IActionResult> Index()
         {
-            
-            return View();
+            return View("CreateMovie");
         }
-        public async Task<IActionResult> AllMovies()
-        {
-            var movies = await _client.Cypher.Match("(m:Movie)")
-                                            .Return(m => m.As<Movie>()).ResultsAsync;
-            IEnumerable<Movie> ListofMovies = movies;
-            return View(ListofMovies);
-        }
-        
 
         public MovieController(IGraphClient client)
         {
@@ -34,7 +25,7 @@ namespace NapredneBP_Project.Controllers
 
         [HttpPost]
         [Route("CreateMovie")]
-        public async Task<IActionResult> CreateNodeActor(Movie movie)
+        public async Task<IActionResult> CreateMovie(Movie movie)
         {
 
             Movie movieNew = new Movie()
@@ -44,25 +35,29 @@ namespace NapredneBP_Project.Controllers
                 Description = movie.Description,
                 ImageUri = movie.ImageUri,
                 PublishingDate = movie.PublishingDate,
-                Rate = movie.Rate,
-                RateCount = movie.RateCount
+                Rate = 0,
+                RateCount = 0
             };
 
             await _client.Cypher.Create("(m:Movie $movie)")
                                 .WithParam("movie", movieNew)
                                 .ExecuteWithoutResultsAsync();
 
-            return Ok();
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                            .Return(m => m.As<Movie>()).ResultsAsync;
+            IEnumerable<Movie> ListofMovies = movies;
+
+            return View("AllMovies", ListofMovies);
         }
 
         [HttpGet]
-        [Route("GetAllMovies")]
-        public async Task<IActionResult> GetAllMovies()
+        [Route("AllMovies")]
+        public async Task<IActionResult> AllMovies()
         {
-            IEnumerable<Movie> movies = await _client.Cypher.Match("(m:Movie)")
+            var movies = await _client.Cypher.Match("(m:Movie)")
                                             .Return(m => m.As<Movie>()).ResultsAsync;
-            return Ok(movies);
-            
+            IEnumerable<Movie> ListofMovies = movies;
+            return View(ListofMovies);
         }
 
         [HttpGet]
@@ -78,25 +73,17 @@ namespace NapredneBP_Project.Controllers
                 a = item.film;
             }
             return View(a);
-
-            //return Ok(movie);
         }
 
         [HttpGet]
         [Route("GetMovieByTitle/{title}")]
         public async Task<IActionResult> GetMovieByTitle(String title)
         {
-            var movie = await _client.Cypher.Match("(m:Movie)")
-                                            .Where((Movie m) => m.Title == title)
-                                            .Return(m =>new Movie{ 
-                                                Title=m.As<Movie>().Title,
-                                                PublishingDate=m.As<Movie>().PublishingDate
-
-                                            }).ResultsAsync;
-            return Ok(movie);
-            
-            
-            
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                             .Where((Movie m) => m.Title == title)
+                                             .Return(m => m.As<Movie>()).ResultsAsync;
+            IEnumerable<Movie> ListofMovies = movies;
+            return View("AllMovies", ListofMovies);
         }
 
         [HttpGet]
