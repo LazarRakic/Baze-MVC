@@ -10,7 +10,10 @@
             <th>
                 Born year
 			</th>
-            <th></th>
+            <th>
+                <a asp-controller="Person" asp-action="Connect"
+                   class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Relationship</a>
+            </th>
 		</tr>
 	</thead>
     <tbody>
@@ -26,10 +29,10 @@
                 <td>
                     <div class="w-75 btn-group" role="group">
                         <a asp-controller="Person" asp-action="Update" asp-route-id="@obj.Id"
-                        class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                           class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
                         <a asp-controller="Person" asp-action="Delete" asp-route-id="@obj.Id"
-                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
-					</div>
+                           class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                    </div>
 				</td>
 			</tr>
         }

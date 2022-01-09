@@ -42,7 +42,8 @@ namespace NapredneBP_Project.Controllers
                 ImageUri = movie.ImageUri,
                 PublishingDate = movie.PublishingDate,
                 Rate = 0,
-                RateCount = 0
+                RateCount = 0,
+                RateSum = 0
             };
 
             await _client.Cypher.Create("(m:Movie $movie)")
@@ -115,8 +116,8 @@ namespace NapredneBP_Project.Controllers
                 }
 
                 m.RateCount += 1;
-                m.Rate += movie.Rate;
-                m.Rate = m.Rate / m.RateCount;
+                m.RateSum += movie.Rate;
+                m.Rate = m.RateSum / m.RateCount;
 
                 query = await _client.Cypher.Match("(m:Movie)")
                                                 .Where((Movie m) => m.Id == id)

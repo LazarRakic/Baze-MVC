@@ -37,7 +37,7 @@ namespace NapredneBP_Project.Controllers
             {
                 Id = Guid.NewGuid(),
                 Name = person.Name,
-                BornYear = person.BornYear,
+                BornYear = person.BornYear
             };
             await _client.Cypher.Create("(p:Person $person)")
                                 .WithParam("person", person_new)
@@ -96,12 +96,6 @@ namespace NapredneBP_Project.Controllers
             return RedirectToAction("GetAllPersons");
         }
 
-
-
-
-
-
-
         [HttpGet]
         [Route("GetProperty/{id}")]
         public async Task<IActionResult> GetProperty(Guid id)
@@ -145,6 +139,44 @@ namespace NapredneBP_Project.Controllers
             };
 
             await _client.Cypher.Match("(p:Person)").Where((Person p) => p.Name == name).Set("p=$person").WithParam("person", person_new).ExecuteWithoutResultsAsync();
+            return Ok();
+        }
+
+        public async Task<IActionResult> Connect()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        //[Route("{pid}/{rtype}/{title}")]
+        [Route("Relationship")]
+        public async Task<IActionResult> RelationshipConnect(Models.Relationship relationship)
+        {
+            if (relationship.Name.ToLower() == "actedin")
+                relationship.Name = "Acted_in";
+            if (relationship.Name.ToLower() == "directedby")
+                relationship.Name = "Directed_by";
+
+            await _client.Cypher.Match("(p:Person), (m:Movie)")
+                                .Where((Person p, Movie m) => p.Name == relationship.PersonName && m.Title == relationship.MovieName)
+                                .Create("(p)-[r:" + relationship.Name + "]->(m)")
+                                .ExecuteWithoutResultsAsync();
+            return RedirectToAction("GetAllPersons");
+        }
+
+        [HttpGet]
+        [Route("{rtype}/Diconnect/{title}")]
+        public async Task<IActionResult> Disconnect(string rtype, string title)
+        {
+            if (rtype.ToLower() == "actedin")
+                rtype = "Acted_in";
+            if (rtype.ToLower() == "directedby")
+                rtype = "Directed_by";
+
+            await _client.Cypher.Match("p=()-[r:" + rtype + "]->(m:Movie)")
+                                .Where((Movie m) => m.Title == title)
+                                .Delete("r")
+                                .ExecuteWithoutResultsAsync();
             return Ok();
         }
     }

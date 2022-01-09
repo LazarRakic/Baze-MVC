@@ -233,3 +233,9 @@ C:\Users\Lazar\Desktop\MVC Baze\Baze-MVC\NapredneBP_Project\NapredneBP_Project\o
 C:\Users\Lazar\Desktop\MVC Baze\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.pdb
 C:\Users\Lazar\Desktop\MVC Baze\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.genruntimeconfig.cache
 C:\Users\Lazar\Desktop\MVC Baze\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Details.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Details.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Person\Create.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Person\Delete.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Person\GetAllPersons.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Person\Update.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Person\Connect.cshtml.g.cs

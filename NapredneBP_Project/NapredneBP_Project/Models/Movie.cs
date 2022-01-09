@@ -21,5 +21,6 @@ namespace NapredneBP_Project.Models
         public double Rate { get; set; }
 
         public int RateCount { get; set; }
+        public double RateSum { get; set; }
     }
 }

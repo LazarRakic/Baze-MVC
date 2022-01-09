@@ -1,0 +1,32 @@
+﻿@model NapredneBP_Project.Models.Relationship
+@{
+    <form method="get" asp-action="RelationshipConnect">
+        <input asp-for="Id" hidden />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <hr>
+                <h2 class="text-primary">Add new relationship</h2>
+                <hr />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="PersonName"></label>
+                <input asp-for="PersonName" class="form-control" />
+                <span asp-validation-for="PersonName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="MovieName"></label>
+                <input asp-for="MovieName" class="form-control" />
+                <span asp-validation-for="MovieName" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:150px">Connect</button>
+            <a asp-controller="Person" asp-action="GetAllPersons" class="btn btn-secondary" style="width:150px">
+                Back to list
+            </a>
+        </div>
+    </form>
+}
