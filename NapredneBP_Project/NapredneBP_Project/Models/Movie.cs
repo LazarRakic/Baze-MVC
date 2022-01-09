@@ -22,5 +22,8 @@ namespace NapredneBP_Project.Models
 
         public int RateCount { get; set; }
         public double RateSum { get; set; }
+
+        public IEnumerable<Person> ListOfActors { get; set; }
+        public IEnumerable<Person> ListOfDirectors { get; set; }
     }
 }

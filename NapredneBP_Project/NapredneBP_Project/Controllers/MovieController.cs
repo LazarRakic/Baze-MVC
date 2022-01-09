@@ -67,13 +67,26 @@ namespace NapredneBP_Project.Controllers
         [Route("GetMovieById/{id}")]
         public async Task<IActionResult> GetMovieById(Guid id)
         {
-            var movie = await _client.Cypher.Match("(m:Movie)")
+            /*var movie = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Id == id)
-                                            .Return((m) => new { film = m.As<Movie>() }).ResultsAsync;
+                                            .Return((m) => new { 
+                                                film = m.As<Movie>(),
+                                                actors=m.As<Person>()
+                                            }).ResultsAsync;*/
+
+            var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
+                                             .Where((Movie m)=> m.Id==id)
+                                             .Return((m,p) => new { 
+                                                 film=m.As<Movie>(),
+                                                 actors=p.CollectAs<Person>()
+                                             }
+                                             ).ResultsAsync;
             Movie a = new Movie();
-            foreach (var item in movie)
+            foreach (var item in movie1)
             {
                 a = item.film;
+                a.ListOfActors = item.actors;
+               
             }
             return View("Details",a);
         }

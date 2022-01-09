@@ -45,10 +45,10 @@
                 <h3>Actors</h3>
                 <br />
                 <ul>
-                    <li>Bice Dodati Glumci</li>
-                    <li>Bice Dodati Glumci</li>
-                    <li>Bice Dodati Glumci</li>
-                    <li>Bice Dodati Glumci</li>
+                    @foreach (var obj in Model.ListOfActors)
+                    {
+                    <li>@obj.Name</li>
+                    }
                 </ul>
             </div>
             <br />
