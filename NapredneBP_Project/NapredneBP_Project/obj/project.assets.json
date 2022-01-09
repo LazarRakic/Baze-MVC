@@ -2171,19 +2171,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lazar\\.nuget\\packages\\": {}
+    "C:\\Users\\Teodora\\.nuget\\packages\\": {},
+    "D:\\Visual Studio\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+      "projectUniqueName": "C:\\Users\\Teodora\\Desktop\\7. semestar\\Napredne baze podataka\\projekat 1\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
       "projectName": "NapredneBP_Project",
-      "projectPath": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
-      "packagesPath": "C:\\Users\\Lazar\\.nuget\\packages\\",
-      "outputPath": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
+      "projectPath": "C:\\Users\\Teodora\\Desktop\\7. semestar\\Napredne baze podataka\\projekat 1\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+      "packagesPath": "C:\\Users\\Teodora\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Teodora\\Desktop\\7. semestar\\Napredne baze podataka\\projekat 1\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "D:\\Visual Studio\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Lazar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Teodora\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2232,7 +2237,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
