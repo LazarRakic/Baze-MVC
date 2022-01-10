@@ -2171,19 +2171,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lazar\\.nuget\\packages\\": {}
+    "C:\\Users\\Lazar\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+      "projectUniqueName": "C:\\Users\\Lazar\\Desktop\\MVC NBP\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
       "projectName": "NapredneBP_Project",
-      "projectPath": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
+      "projectPath": "C:\\Users\\Lazar\\Desktop\\MVC NBP\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\NapredneBP_Project.csproj",
       "packagesPath": "C:\\Users\\Lazar\\.nuget\\packages\\",
-      "outputPath": "E:\\Lazar\\Elfak\\4. godina\\Napredne baze podataka\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
+      "outputPath": "C:\\Users\\Lazar\\Desktop\\MVC NBP\\Baze-MVC\\NapredneBP_Project\\NapredneBP_Project\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\Lazar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -232,7 +232,7 @@ namespace NapredneBP_Project.Controllers
             return RedirectToAction("AllMovies");
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("GetMovieByGenre")]
         public async Task<IActionResult> GetMovieByGenre(Movie movie)
         {
@@ -241,7 +241,7 @@ namespace NapredneBP_Project.Controllers
                                              .Return(m => m.As<Movie>()).ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
             return View("AllMovies", ListofMovies);
-        }
+        }*/
 
         [HttpGet]
         [Route("GetAllLabelsForMovie/{title}")]

@@ -18,7 +18,7 @@ namespace NapredneBP_Project.Models
 
         public int PublishingDate { get; set; }
 
-        public String Genre { get; set; }
+        //public String Genre { get; set; }
 
         public double Rate { get; set; }
 
