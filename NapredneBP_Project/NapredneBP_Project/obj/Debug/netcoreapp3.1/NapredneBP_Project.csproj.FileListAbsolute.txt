@@ -396,3 +396,4 @@ C:\Users\Lazar\Desktop\MVC Baye\Baze-MVC\NapredneBP_Project\NapredneBP_Project\o
 C:\Users\Lazar\Desktop\MVC Baye\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.dll
 C:\Users\Lazar\Desktop\MVC Baye\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.pdb
 C:\Users\Lazar\Desktop\MVC Baye\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.genruntimeconfig.cache
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Index1.cshtml.g.cs

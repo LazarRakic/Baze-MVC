@@ -1,17 +1,7 @@
 ﻿@model IEnumerable<Movie>
-@*@model NapredneBP_Project.Models.Movie*@
-
 @{ ViewData["Title"] = "All Movies";
 }
 <h1>All Movies</h1>
-
-@*<div class="form-group">
-    <input asp-for="@Model.Title" placeholder="Search" />
-    <span asp-validation-for="@Model.Title"></span>
-
-    @Html.AntiForgeryToken()
-    <button class="btn btn-primary" type="submit">Search movie</button>
-</div>*@
 
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>

@@ -91,11 +91,10 @@ namespace NapredneBP_Project.Controllers
 
             var movie = await _client.Cypher.Match("(director:Person)-[rel:Directed_by]->(m:Movie)<-[rela:Acted_in]-(actor:Person)")
                                              .Where((Movie m) => m.Id == id)
-                                             .Return((m,actor,director) => new {
-                                                 film=m.As<Movie>(),
+                                             .Return((m, actor, director) => new {
+                                                 film = m.As<Movie>(),
                                                  actors = actor.CollectAs<Person>(),
-                                                 directors=director.CollectAs<Person>()
-
+                                                 directors = director.CollectAs<Person>()
                                              }
                                              ).ResultsAsync;
 
@@ -165,7 +164,7 @@ namespace NapredneBP_Project.Controllers
                 }
             }
 
-            return View("Details",a);
+            return View("Details", a);
         }
 
         [HttpGet]
@@ -242,6 +241,36 @@ namespace NapredneBP_Project.Controllers
                                              .Return(m => m.As<Movie>()).ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
             return View("AllMovies", ListofMovies);
+        }
+
+        [HttpGet]
+        [Route("GetAllLabelsForMovie/{title}")]
+        public async Task<IActionResult> GetAllLabelsForMovie(string title)
+        {
+            var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                            .Where((Movie m) => m.Title == title)
+                                            .ReturnDistinct(m => m.Labels()).ResultsAsync;
+            return Ok(movieLabels);
+        }
+
+        [HttpGet]
+        [Route("GetAllLabels")]
+        public async Task<IActionResult> GetAllLabels()
+        {
+            var movieLabels = await _client.Cypher.Match("(m)")
+                                            .ReturnDistinct(m => m.Labels()).ResultsAsync;
+            return Ok(movieLabels);
+        }
+
+        [HttpPost]
+        [Route("SetLabelForMovie/{title}/{label}")]
+        public async Task<IActionResult> GetAllLabels(string title, string label)
+        {
+            var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                                  .Where((Movie m) => m.Title == title)
+                                                  .Set("m:" + label + "")
+                                                  .ReturnDistinct(m => m.Labels()).ResultsAsync;
+            return Ok(movieLabels);
         }
     }
 }
