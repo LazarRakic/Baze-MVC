@@ -42,14 +42,19 @@
             </div>
             <br />
             <div>
+                <h3>Genre</h3>
+                <p style="text-align:left">@Model.Genre</p>
+            </div>
+            <br />
+            <div>
                 <h3>Actors</h3>
                 <br />
                 <ul>
                     @if (Model.ListOfActors != null)
                     {
                         @foreach (var obj in Model.ListOfActors)
-                        { 
-                          <li>@obj.Name</li>
+                        {
+                            <li>@obj.Name</li>
                         }
                     }
                 </ul>

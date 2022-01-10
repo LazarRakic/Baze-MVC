@@ -24,6 +24,12 @@ namespace NapredneBP_Project.Controllers
         {
             return View("CreateMovie");
         }
+
+        public async Task<IActionResult> Index1()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> GMBT()
         {
             return View("GetMovieByTitle");
@@ -178,10 +184,21 @@ namespace NapredneBP_Project.Controllers
         {
             await _client.Cypher.Match("(m:Movie)")
                                 .Where((Movie m) => m.Id == id)
-                                .Delete("m")
+                                .DetachDelete("m")
                                 .ExecuteWithoutResultsAsync();
 
             return RedirectToAction("AllMovies");
+        }
+
+        [HttpGet]
+        [Route("GetMovieByGenre")]
+        public async Task<IActionResult> GetMovieByGenre(Movie movie)
+        {
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                             .Where((Movie m) => m.Genre == movie.Genre)
+                                             .Return(m => m.As<Movie>()).ResultsAsync;
+            IEnumerable<Movie> ListofMovies = movies;
+            return View("AllMovies", ListofMovies);
         }
     }
 }

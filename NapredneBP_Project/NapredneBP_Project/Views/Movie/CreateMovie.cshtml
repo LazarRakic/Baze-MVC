@@ -13,6 +13,11 @@
             <span asp-validation-for="@Model.Description"></span>
         </div>
         <div class="form-group">
+            <label>Genre:</label>
+            <input asp-for="@Model.Genre" />
+            <span asp-validation-for="@Model.Genre"></span>
+        </div>
+        <div class="form-group">
             <label>Image Uri:</label>
             <input asp-for="@Model.ImageUri" />
             <span asp-validation-for="@Model.ImageUri"></span>

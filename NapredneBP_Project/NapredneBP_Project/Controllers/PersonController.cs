@@ -90,7 +90,7 @@ namespace NapredneBP_Project.Controllers
         {
             await _client.Cypher.Match("(p:Person)")
                                 .Where((Person p) => p.Id == per.Id)
-                                .Delete("p")
+                                .DetachDelete("p")
                                 .ExecuteWithoutResultsAsync();
 
             return RedirectToAction("GetAllPersons");
