@@ -80,48 +80,91 @@ namespace NapredneBP_Project.Controllers
                                                 
                                             }).ResultsAsync;*/
 
-            var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
+           /* var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
                                              .Where((Movie m)=> m.Id==id)
                                              .Return((m,p) => new { 
                                                  film=m.As<Movie>(),
                                                  actors=p.CollectAs<Person>()
                                              }
+                                             ).ResultsAsync;*/
+
+
+            var movie = await _client.Cypher.Match("(director:Person)-[rel:Directed_by]->(m:Movie)<-[rela:Acted_in]-(actor:Person)")
+                                             .Where((Movie m) => m.Id == id)
+                                             .Return((m,actor,director) => new {
+                                                 film=m.As<Movie>(),
+                                                 actors = actor.CollectAs<Person>(),
+                                                 directors=director.CollectAs<Person>()
+
+                                             }
                                              ).ResultsAsync;
+
             
             Movie a = new Movie();
-            foreach (var item in movie1)
+            foreach (var item in movie)
             {
-                
-                
-                    a = item.film;
 
+                    a = item.film;
+                if (item.actors != null && item.directors != null)
+                {
                     a.ListOfActors = item.actors;
-                
-               
+                    a.ListOfDirectors = item.directors;
+                }
+
             }
-            if(a.ListOfActors==null)
+
+            if (a.ListOfActors==null )
             {
-                var movie = await _client.Cypher.Match("(m:Movie)")
+                var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Directed_by]-(p:Person)")
+                                              .Where((Movie m) => m.Id == id)
+                                              .Return((m, p) => new {
+                                                  film = m.As<Movie>(),
+                                                  directros = p.CollectAs<Person>()
+                                              }
+                                              ).ResultsAsync;
+
+
+                foreach (var item in movie1)
+                {
+                    a = item.film;
+                    a.ListOfDirectors = item.directros;
+                }
+
+            }
+            if (a.ListOfDirectors == null)
+            {
+                var movie2 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
+                                              .Where((Movie m) => m.Id == id)
+                                              .Return((m, p) => new {
+                                                  film = m.As<Movie>(),
+                                                  actors = p.CollectAs<Person>()
+                                              }
+                                              ).ResultsAsync;
+
+
+                foreach (var item in movie2)
+                {
+                    a = item.film;
+                    a.ListOfActors = item.actors;
+                }
+
+            }
+            if(a.ListOfActors == null && a.ListOfDirectors == null)
+            {
+                var moviee = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Id == id)
                                             .Return((m) => new {
                                                 film = m.As<Movie>()
 
                                             }).ResultsAsync;
 
-                
-                foreach (var item in movie)
+                foreach (var item in moviee)
                 {
-
-
                     a = item.film;
-
                     
-
-
                 }
-
-
             }
+
             return View("Details",a);
         }
 

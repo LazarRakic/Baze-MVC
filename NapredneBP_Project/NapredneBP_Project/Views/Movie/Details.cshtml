@@ -62,5 +62,21 @@
             <br />
 
         </div>
+        <div style="margin-left: 150px; position:relative;">
+            <div>
+                <h3>Directed by</h3>
+                <br />
+                <ul>
+                    @if (Model.ListOfDirectors != null)
+                    {
+                        @foreach (var obj in Model.ListOfDirectors)
+                        {
+                            <li>@obj.Name</li>
+                        }
+                    }
+                </ul>
+            </div>
+
+        </div>
 </div>
 </div>
