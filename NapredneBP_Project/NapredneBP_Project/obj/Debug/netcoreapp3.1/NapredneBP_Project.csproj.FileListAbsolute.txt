@@ -450,3 +450,4 @@ C:\Users\Lazar\Desktop\MVC NBP\Baze-MVC\NapredneBP_Project\NapredneBP_Project\ob
 C:\Users\Lazar\Desktop\MVC NBP\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.dll
 C:\Users\Lazar\Desktop\MVC NBP\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.pdb
 C:\Users\Lazar\Desktop\MVC NBP\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.genruntimeconfig.cache
+D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\GetTopMovies.cshtml.g.cs

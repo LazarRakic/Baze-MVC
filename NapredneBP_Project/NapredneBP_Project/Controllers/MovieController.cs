@@ -272,5 +272,18 @@ namespace NapredneBP_Project.Controllers
                                                   .ReturnDistinct(m => m.Labels()).ResultsAsync;
             return Ok(movieLabels);
         }
+
+        [HttpGet]
+        [Route("TopMovies")]
+        public async Task<IActionResult> GetTopMovies()
+        {
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                            .Return(m => m.As<Movie>())
+                                            .OrderBy("m.Rate")
+                                            .Limit(5)
+                                            .ResultsAsync;
+            IEnumerable<Movie> ListofMovies = movies;
+            return View(ListofMovies);
+        }
     }
 }
