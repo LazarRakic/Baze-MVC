@@ -276,6 +276,8 @@ namespace NapredneBP_Project.Controllers
             return Ok(movieLabels);
         }
 
+        //TREBA IZ REDISA
+        /*
         [HttpGet]
         [Route("TopMovies")]
         public async Task<IActionResult> GetTopMovies()
@@ -287,6 +289,6 @@ namespace NapredneBP_Project.Controllers
                                             .ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
             return View(ListofMovies);
-        }
+        }*/
     }
 }
