@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StackExchange.Redis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NapredneBP_Project.Controllers
 {
@@ -24,11 +26,6 @@ namespace NapredneBP_Project.Controllers
         public async Task<IActionResult> Index()
         {
             return View("CreateMovie");
-        }
-
-        public async Task<IActionResult> Index1()
-        {
-            return View();
         }
 
         public async Task<IActionResult> GMBT()
@@ -67,8 +64,6 @@ namespace NapredneBP_Project.Controllers
             var movies = await _client.Cypher.Match("(m:Movie)")
                                             .Return(m => m.As<Movie>()).ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
-            _redisService.Set("fsf", "tea");
-            _redisService.Get("fsf");
             return View(ListofMovies);
         }
 
@@ -76,98 +71,72 @@ namespace NapredneBP_Project.Controllers
         [Route("GetMovieById/{id}")]
         public async Task<IActionResult> GetMovieById(Guid id)
         {
-            /*var movie = await _client.Cypher.Match("(m:Movie)")
-                                            .Where((Movie m) => m.Id == id)
-                                            .Return((m) => new { 
-                                                film = m.As<Movie>()
-                                                
-                                            }).ResultsAsync;*/
+            var movieRedis = _redisService.Get(id.ToString());
 
-           /* var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
-                                             .Where((Movie m)=> m.Id==id)
-                                             .Return((m,p) => new { 
-                                                 film=m.As<Movie>(),
-                                                 actors=p.CollectAs<Person>()
-                                             }
-                                             ).ResultsAsync;*/
-
-
-            var movie = await _client.Cypher.Match("(director:Person)-[rel:Directed_by]->(m:Movie)<-[rela:Acted_in]-(actor:Person)")
-                                             .Where((Movie m) => m.Id == id)
-                                             .Return((m, actor, director) => new {
-                                                 film = m.As<Movie>(),
-                                                 actors = actor.CollectAs<Person>(),
-                                                 directors = director.CollectAs<Person>()
-                                             }
-                                             ).ResultsAsync;
-
-            
-            Movie a = new Movie();
-            foreach (var item in movie)
+            if (movieRedis.Result != null)
             {
+                Movie m = JsonSerializer.Deserialize<Movie>(movieRedis.Result);
 
-                    a = item.film;
-                if (item.actors != null && item.directors != null)
-                {
-                    a.ListOfActors = item.actors;
-                    a.ListOfDirectors = item.directors;
-                }
+                System.Diagnostics.Debug.WriteLine("DONE BY REDIS!!!");
 
+                return View("Details", m);
             }
-
-            if (a.ListOfActors==null )
+            else
             {
-                var movie1 = await _client.Cypher.Match("(m:Movie)-[rel:Directed_by]-(p:Person)")
-                                              .Where((Movie m) => m.Id == id)
-                                              .Return((m, p) => new {
-                                                  film = m.As<Movie>(),
-                                                  directros = p.CollectAs<Person>()
-                                              }
-                                              ).ResultsAsync;
+                //var movie = await _client.Cypher.Match("(director:Person)-[rel:Directed_by]->(m:Movie)<-[rela:Acted_in]-(actor:Person)")
+                //                             .Where((Movie m) => m.Id == id)
+                //                             .Return((m, actor, director) => new {
+                //                                 film = m.As<Movie>(),
+                //                                 actors = actor.CollectAs<Person>(),
+                //                                 directors = director.CollectAs<Person>()
+                //                             }
+                //                             ).ResultsAsync;
+                Movie a = new Movie();
 
-
-                foreach (var item in movie1)
-                {
-                    a = item.film;
-                    a.ListOfDirectors = item.directros;
-                }
-
-            }
-            if (a.ListOfDirectors == null)
-            {
-                var movie2 = await _client.Cypher.Match("(m:Movie)-[rel:Acted_in]-(p:Person)")
-                                              .Where((Movie m) => m.Id == id)
-                                              .Return((m, p) => new {
-                                                  film = m.As<Movie>(),
-                                                  actors = p.CollectAs<Person>()
-                                              }
-                                              ).ResultsAsync;
-
-
-                foreach (var item in movie2)
-                {
-                    a = item.film;
-                    a.ListOfActors = item.actors;
-                }
-
-            }
-            if(a.ListOfActors == null && a.ListOfDirectors == null)
-            {
-                var moviee = await _client.Cypher.Match("(m:Movie)")
+                var movie0 = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Id == id)
                                             .Return((m) => new {
                                                 film = m.As<Movie>()
-
                                             }).ResultsAsync;
 
-                foreach (var item in moviee)
+                var movie1 = await _client.Cypher.Match("(m:Movie)<-[rel:Directed_by]-(p:Person)")
+                                                  .Where((Movie m) => m.Id == id)
+                                                  .Return((m, p) => new {
+                                                      film = m.As<Movie>(),
+                                                      directors = p.CollectAs<Person>()
+                                                  }
+                                                  ).ResultsAsync;
+
+                var movie2 = await _client.Cypher.Match("(m:Movie)<-[rel:Acted_in]-(p:Person)")
+                                                  .Where((Movie m) => m.Id == id)
+                                                  .Return((m, p) => new {
+                                                      film = m.As<Movie>(),
+                                                      actors = p.CollectAs<Person>()
+                                                  }
+                                                  ).ResultsAsync;
+
+                foreach (var item in movie0)
                 {
                     a = item.film;
-                    
                 }
+
+                foreach (var obj in movie1)
+                {
+                    a.ListOfDirectors = obj.directors;
+                }
+
+                foreach (var obj in movie2)
+                {
+                    a.ListOfActors = obj.actors;
+                }
+
+
+                await _redisService.Set(a.Id.ToString(), JsonSerializer.Serialize(a));
+
+                return View("Details", a);
             }
 
-            return View("Details", a);
+            
         }
 
         [HttpGet]

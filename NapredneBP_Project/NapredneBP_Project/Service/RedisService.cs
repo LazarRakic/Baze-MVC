@@ -30,15 +30,14 @@ namespace NapredneBP_Project
 
         public async Task Set(string key, string value)
         {
-            var result = _redis.GetDatabase().StringSet("mykey", "c", TimeSpan.FromSeconds(30));
-            var result1 = _redis.GetDatabase().StringSet("mykey1", "a", TimeSpan.FromDays(5));
-            var result2 = _redis.GetDatabase().StringSet("mykey2", "b", TimeSpan.FromDays(5));
+            var result = _redis.GetDatabase().StringSet(key, value, TimeSpan.FromSeconds(10));
         }
 
-        public async Task Get(string key)
+        public async Task<string> Get(string key)
         {
-            string value =  _redis.GetDatabase().StringGet("mykey");
-            Console.WriteLine(value);
+            string value =  _redis.GetDatabase().StringGet(key);
+
+            return value;
         }
     }
 }

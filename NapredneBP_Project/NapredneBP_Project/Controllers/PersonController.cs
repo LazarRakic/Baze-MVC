@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StackExchange.Redis;
 
 namespace NapredneBP_Project.Controllers
 {
@@ -13,12 +12,10 @@ namespace NapredneBP_Project.Controllers
     {
         
         private readonly IGraphClient _client;
-        private readonly RedisService _redisService;
 
-        public PersonController(IGraphClient client, RedisService redisService)
+        public PersonController(IGraphClient client)
         {
             _client = client;
-            _redisService = redisService;
         }
 
         public IActionResult Index()
@@ -53,7 +50,8 @@ namespace NapredneBP_Project.Controllers
         [Route("GetAllPersons")]
         public async Task<IActionResult> GetAllPersons()
         {
-            var persons = await _client.Cypher.Match("(n:Person)").Return(n => n.As<Person>()).ResultsAsync;
+            var persons = await _client.Cypher.Match("(n:Person)")
+                                              .Return(n => n.As<Person>()).ResultsAsync;
             IEnumerable<Person> p = persons;
             return View(p);
         }
@@ -61,8 +59,8 @@ namespace NapredneBP_Project.Controllers
         public async Task<IActionResult> Update(Guid id)
         {
             var person = await _client.Cypher.Match("(n:Person)")
-                                            .Where((Movie n) => n.Id == id)
-                                            .Return(n => n.As<Person>()).ResultsAsync;
+                                             .Where((Movie n) => n.Id == id)
+                                             .Return(n => n.As<Person>()).ResultsAsync;
             Person per = person.First();
             return View(per);
         }
@@ -71,10 +69,21 @@ namespace NapredneBP_Project.Controllers
         [Route("UpdatePerson")]
         public async Task<IActionResult> UpdatePerson(Person per)
         {
-            await _client.Cypher.Match("(p:Person)").Where((Person p) => p.Id == per.Id)
-                                .Set("p=$person")
-                                .WithParam("person", per)
-                                .ExecuteWithoutResultsAsync();
+            var result = await _client.Cypher.Match("(p:Person)")
+                                                .Where((Person p) => p.Id == per.Id)
+                                                .Return(n => n.As<Person>()).ResultsAsync;
+
+            Person personOld = result.First();
+
+            foreach(var obj in per.Relationships)
+            {
+                personOld.Relationships.Add(obj);
+            }
+
+            await _client.Cypher.Match("(p:Person)")
+                                .Set("p=$person").WithParam("person", personOld)
+                                .Where((Person p) => p.Id == per.Id).ExecuteWithoutResultsAsync();
+
             return RedirectToAction("GetAllPersons");
         }
 
@@ -138,7 +147,6 @@ namespace NapredneBP_Project.Controllers
             {
                 Name = person.Name,
                 BornYear = person.BornYear,
-
             };
 
             await _client.Cypher.Match("(p:Person)").Where((Person p) => p.Name == name).Set("p=$person").WithParam("person", person_new).ExecuteWithoutResultsAsync();
@@ -151,7 +159,6 @@ namespace NapredneBP_Project.Controllers
         }
 
         [HttpGet]
-        //[Route("{pid}/{rtype}/{title}")]
         [Route("Relationship")]
         public async Task<IActionResult> RelationshipConnect(Models.Relationship relationship)
         {
@@ -160,10 +167,21 @@ namespace NapredneBP_Project.Controllers
             if (relationship.Name.ToLower() == "directedby")
                 relationship.Name = "Directed_by";
 
-            await _client.Cypher.Match("(p:Person), (m:Movie)")
+            Models.Relationship relationship1 = new Models.Relationship()
+            {
+                Id = Guid.NewGuid(),
+                Name = relationship.Name,
+                PersonName = relationship.PersonName,
+                MovieName = relationship.MovieName
+            };
+
+            var rel = await _client.Cypher.Match("(p:Person), (m:Movie)")
                                 .Where((Person p, Movie m) => p.Name == relationship.PersonName && m.Title == relationship.MovieName)
-                                .Create("(p)-[r:" + relationship.Name + "]->(m)")
-                                .ExecuteWithoutResultsAsync();
+                                .Create("(p)-[r:" + relationship.Name + " $relation]->(m)")
+                                .WithParam("relation", relationship1)
+                                .Return(r => r.As<Models.Relationship>())
+                                .ResultsAsync;
+
             return RedirectToAction("GetAllPersons");
         }
 

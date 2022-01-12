@@ -9,7 +9,6 @@ namespace NapredneBP_Project.Models
     public class Movie
     {
         public Guid Id { get; set; }
-        [Display(Name = "Naziv")]
         public String Title { get; set; }
 
         public String Description { get; set; }
