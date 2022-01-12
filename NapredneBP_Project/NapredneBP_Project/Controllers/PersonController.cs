@@ -4,6 +4,7 @@ using Neo4jClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace NapredneBP_Project.Controllers
@@ -12,10 +13,11 @@ namespace NapredneBP_Project.Controllers
     {
         
         private readonly IGraphClient _client;
-
-        public PersonController(IGraphClient client)
+        private readonly RedisService _redisService;
+        public PersonController(IGraphClient client, RedisService redisService)
         {
             _client = client;
+            _redisService = redisService;
         }
 
         public IActionResult Index()
@@ -167,21 +169,72 @@ namespace NapredneBP_Project.Controllers
             if (relationship.Name.ToLower() == "directedby")
                 relationship.Name = "Directed_by";
 
-            Models.Relationship relationship1 = new Models.Relationship()
-            {
-                Id = Guid.NewGuid(),
-                Name = relationship.Name,
-                PersonName = relationship.PersonName,
-                MovieName = relationship.MovieName
-            };
+            //Models.Relationship relationship1 = new Models.Relationship()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    Name = relationship.Name,
+            //    PersonName = relationship.PersonName,
+            //    MovieName = relationship.MovieName
+            //};
 
             var rel = await _client.Cypher.Match("(p:Person), (m:Movie)")
                                 .Where((Person p, Movie m) => p.Name == relationship.PersonName && m.Title == relationship.MovieName)
-                                .Create("(p)-[r:" + relationship.Name + " $relation]->(m)")
-                                .WithParam("relation", relationship1)
-                                .Return(r => r.As<Models.Relationship>())
+                                .Create("(p)-[r:" + relationship.Name + "]->(m)")
+                                //.WithParam("relation", relationship1)
+                                .Return(m => m.As<Movie>())
                                 .ResultsAsync;
+            var result = _redisService.Get(rel.First().Id.ToString());
+            if(result.Result != null)
+            {
+                var movie0 = await _client.Cypher.Match("(m:Movie)")
+                                                 .Where((Movie m) => m.Title == relationship.MovieName)
+                                                 .Return((m) => new { film = m.As<Movie>() }).ResultsAsync;
 
+                var movie1 = await _client.Cypher.Match("(m:Movie)<-[rel:Directed_by]-(p:Person)")
+                                                 .Where((Movie m) => m.Title == relationship.MovieName)
+                                                 .Return((m, p) => new {
+                                                     film = m.As<Movie>(),
+                                                     directors = p.CollectAs<Person>()
+                                                 }).ResultsAsync;
+
+                var movie2 = await _client.Cypher.Match("(m:Movie)<-[rel:Acted_in]-(p:Person)")
+                                                 .Where((Movie m) => m.Title == relationship.MovieName)
+                                                 .Return((m, p) => new {
+                                                     film = m.As<Movie>(),
+                                                     actors = p.CollectAs<Person>()
+                                                 }).ResultsAsync;
+
+                MovieDTO a = new MovieDTO();
+
+                foreach (var item in movie0)
+                {
+                    a.Id = item.film.Id;
+                    a.Title = item.film.Title;
+                    a.Description = item.film.Description;
+                    a.ImageUri = item.film.ImageUri;
+                    a.PublishingDate = item.film.PublishingDate;
+                    a.Rate = item.film.Rate;
+                }
+
+                foreach (var obj in movie1)
+                {
+                    a.ListOfDirectors = obj.directors;
+                }
+
+                foreach (var obj in movie2)
+                {
+                    a.ListOfActors = obj.actors;
+                }
+
+                var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                            .Where((Movie m) => m.Title == a.Title)
+                                            .ReturnDistinct(m => m.Labels()).ResultsAsync;
+
+                a.Labels = (IEnumerable<string>)movieLabels.First();
+
+                await _redisService.Set(a.Id.ToString(), JsonSerializer.Serialize(a));
+            }
+            
             return RedirectToAction("GetAllPersons");
         }
 

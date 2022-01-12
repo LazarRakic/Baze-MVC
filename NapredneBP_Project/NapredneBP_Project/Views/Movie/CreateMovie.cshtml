@@ -1,4 +1,4 @@
-﻿@model NapredneBP_Project.Models.Movie
+﻿@model NapredneBP_Project.Models.MovieDTO
 @{
     using (Html.BeginForm("CreateMovie", "Movie"))
     {
@@ -12,21 +12,20 @@
             <input asp-for="@Model.Description" />
             <span asp-validation-for="@Model.Description"></span>
         </div>
-        <!--<div class="form-group">
-            <label>Genre:</label>
-            <input asp-for="" />
-            <span asp-validation-for=""></span>
-        </div>-->
         <div class="form-group">
             <label>Image Uri:</label>
             <input asp-for="@Model.ImageUri" />
             <span asp-validation-for="@Model.ImageUri"></span>
         </div>
-
         <div class="form-group">
             <label>Publishing date:</label>
             <input asp-for="@Model.PublishingDate" />
             <span asp-validation-for="@Model.PublishingDate"></span>
+        </div>
+        <div class="form-group">
+            <label>Genre:</label>
+            <input asp-for="@Model.Labels" />
+            <span asp-validation-for="@Model.Labels"></span>
         </div>
 
         @Html.AntiForgeryToken();

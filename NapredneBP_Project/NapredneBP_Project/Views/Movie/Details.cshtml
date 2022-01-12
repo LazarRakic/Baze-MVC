@@ -1,4 +1,4 @@
-﻿@model Movie
+﻿@model MovieDTO
 @{
 
 }
@@ -43,7 +43,18 @@
             <br />
             <div>
                 <h3>Genre</h3>
-                <p style="text-align:left">Genre (pozivace se labele cvora)</p>
+                <ul>
+                    @if (Model.Labels != null)
+                    {
+                        @foreach (var obj in Model.Labels)
+                        {
+                            @if (obj != "Movie")
+                            {
+                                <li>@obj</li>
+                            }
+                        }
+                    }
+                </ul>
             </div>
             <br />
             <div>
@@ -78,5 +89,5 @@
             </div>
 
         </div>
-</div>
+    </div>
 </div>

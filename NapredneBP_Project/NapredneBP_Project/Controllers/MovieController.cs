@@ -35,7 +35,7 @@ namespace NapredneBP_Project.Controllers
 
         [HttpPost]
         [Route("CreateMovie")]
-        public async Task<IActionResult> CreateMovie(Movie movie)
+        public async Task<IActionResult> CreateMovie(MovieDTO movie)
         {
 
             Movie movieNew = new Movie()
@@ -53,6 +53,15 @@ namespace NapredneBP_Project.Controllers
             await _client.Cypher.Create("(m:Movie $movie)")
                                 .WithParam("movie", movieNew)
                                 .ExecuteWithoutResultsAsync();
+
+            var labele = movie.Labels.First().Split(", ");
+            foreach (var obj in labele)
+            {
+                await _client.Cypher.Match("(m:Movie)")
+                                .Where((Movie m) => m.Title == movie.Title)
+                                .Set("m:" + obj + "")
+                                .ReturnDistinct(m => m.Labels()).ResultsAsync;
+            }
 
             return RedirectToAction("AllMovies");
         }
@@ -75,7 +84,7 @@ namespace NapredneBP_Project.Controllers
 
             if (movieRedis.Result != null)
             {
-                Movie m = JsonSerializer.Deserialize<Movie>(movieRedis.Result);
+                MovieDTO m = JsonSerializer.Deserialize<MovieDTO>(movieRedis.Result);
 
                 System.Diagnostics.Debug.WriteLine("DONE BY REDIS!!!");
 
@@ -83,41 +92,32 @@ namespace NapredneBP_Project.Controllers
             }
             else
             {
-                //var movie = await _client.Cypher.Match("(director:Person)-[rel:Directed_by]->(m:Movie)<-[rela:Acted_in]-(actor:Person)")
-                //                             .Where((Movie m) => m.Id == id)
-                //                             .Return((m, actor, director) => new {
-                //                                 film = m.As<Movie>(),
-                //                                 actors = actor.CollectAs<Person>(),
-                //                                 directors = director.CollectAs<Person>()
-                //                             }
-                //                             ).ResultsAsync;
-                Movie a = new Movie();
+                MovieDTO a = new MovieDTO();
 
                 var movie0 = await _client.Cypher.Match("(m:Movie)")
-                                            .Where((Movie m) => m.Id == id)
-                                            .Return((m) => new {
-                                                film = m.As<Movie>()
-                                            }).ResultsAsync;
+                                                 .Where((Movie m) => m.Id == id)
+                                                 .Return((m) => new { film = m.As<Movie>() }).ResultsAsync;
 
                 var movie1 = await _client.Cypher.Match("(m:Movie)<-[rel:Directed_by]-(p:Person)")
-                                                  .Where((Movie m) => m.Id == id)
-                                                  .Return((m, p) => new {
+                                                 .Where((Movie m) => m.Id == id)
+                                                 .Return((m, p) => new {
                                                       film = m.As<Movie>(),
-                                                      directors = p.CollectAs<Person>()
-                                                  }
-                                                  ).ResultsAsync;
+                                                      directors = p.CollectAs<Person>()}).ResultsAsync;
 
                 var movie2 = await _client.Cypher.Match("(m:Movie)<-[rel:Acted_in]-(p:Person)")
-                                                  .Where((Movie m) => m.Id == id)
-                                                  .Return((m, p) => new {
+                                                 .Where((Movie m) => m.Id == id)
+                                                 .Return((m, p) => new {
                                                       film = m.As<Movie>(),
-                                                      actors = p.CollectAs<Person>()
-                                                  }
-                                                  ).ResultsAsync;
+                                                      actors = p.CollectAs<Person>()}).ResultsAsync;
 
                 foreach (var item in movie0)
                 {
-                    a = item.film;
+                    a.Id = item.film.Id;
+                    a.Title = item.film.Title;
+                    a.Description = item.film.Description;
+                    a.ImageUri = item.film.ImageUri;
+                    a.PublishingDate = item.film.PublishingDate;
+                    a.Rate = item.film.Rate;
                 }
 
                 foreach (var obj in movie1)
@@ -130,6 +130,12 @@ namespace NapredneBP_Project.Controllers
                     a.ListOfActors = obj.actors;
                 }
 
+
+                var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                            .Where((Movie m) => m.Title == a.Title)
+                                            .ReturnDistinct(m => m.Labels()).ResultsAsync;
+
+                a.Labels = (IEnumerable<string>)movieLabels.First();
 
                 await _redisService.Set(a.Id.ToString(), JsonSerializer.Serialize(a));
 
@@ -162,7 +168,7 @@ namespace NapredneBP_Project.Controllers
 
         [HttpGet]
         [Route("AddMovieRate/{id}")]
-        public async Task<IActionResult> AddMovieRate(Guid id,Movie movie)
+        public async Task<IActionResult> AddMovieRate(Guid id, MovieDTO movie)
         {
             if (movie.Rate >= 0 && movie.Rate <= 5)
             {
@@ -185,8 +191,7 @@ namespace NapredneBP_Project.Controllers
                                                 .Set("m = $movie")
                                                 .WithParam("movie", m)
                                                 .Return((m) => new { movie = m.As<Movie>() }).ResultsAsync;
-                //return Ok(query);
-                //return View("Index");
+
                 return RedirectToAction("AllMovies");
             }
             return BadRequest();
@@ -215,14 +220,16 @@ namespace NapredneBP_Project.Controllers
             return View("AllMovies", ListofMovies);
         }*/
 
-        [HttpGet]
-        [Route("GetAllLabelsForMovie/{title}")]
-        public async Task<IActionResult> GetAllLabelsForMovie(string title)
+
+        public async Task<IEnumerable<string>> GetAllLabelsForMovie(string title)
         {
             var movieLabels = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Title == title)
                                             .ReturnDistinct(m => m.Labels()).ResultsAsync;
-            return Ok(movieLabels);
+
+            IEnumerable<string> newList = (IEnumerable<string>)movieLabels;
+
+            return newList;
         }
 
         [HttpGet]
