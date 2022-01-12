@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StackExchange.Redis;
+
 
 namespace NapredneBP_Project
 {
@@ -28,10 +30,11 @@ namespace NapredneBP_Project
             var client = new BoltGraphClient(new Uri("bolt://localhost:7687"), "neo4j", "root");   // mozda treba root za pass
             client.ConnectAsync();
             services.AddSingleton<IGraphClient>(client);
+            services.AddSingleton<RedisService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RedisService redisService)
         {
             if (env.IsDevelopment())
             {
@@ -49,6 +52,8 @@ namespace NapredneBP_Project
             app.UseRouting();
 
             app.UseAuthorization();
+
+            redisService.Connect();
 
             app.UseEndpoints(endpoints =>
             {

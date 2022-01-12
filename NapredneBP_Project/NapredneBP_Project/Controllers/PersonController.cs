@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace NapredneBP_Project.Controllers
 {
@@ -12,10 +13,12 @@ namespace NapredneBP_Project.Controllers
     {
         
         private readonly IGraphClient _client;
+        private readonly RedisService _redisService;
 
-        public PersonController(IGraphClient client)
+        public PersonController(IGraphClient client, RedisService redisService)
         {
             _client = client;
+            _redisService = redisService;
         }
 
         public IActionResult Index()

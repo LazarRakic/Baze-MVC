@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace NapredneBP_Project.Controllers
 {
@@ -12,12 +13,12 @@ namespace NapredneBP_Project.Controllers
     public class MovieController : Controller
     {
         private readonly IGraphClient _client;
-        //ovde vrati sve filmove
-        
+        private readonly RedisService _redisService;
 
-        public MovieController(IGraphClient client)
+        public MovieController(IGraphClient client, RedisService redisService)
         {
             _client = client;
+            _redisService = redisService;
         }
 
         public async Task<IActionResult> Index()
@@ -66,6 +67,8 @@ namespace NapredneBP_Project.Controllers
             var movies = await _client.Cypher.Match("(m:Movie)")
                                             .Return(m => m.As<Movie>()).ResultsAsync;
             IEnumerable<Movie> ListofMovies = movies;
+            _redisService.Set("fsf", "tea");
+            _redisService.Get("fsf");
             return View(ListofMovies);
         }
 
