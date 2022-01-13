@@ -358,17 +358,16 @@ namespace NapredneBP_Project.Controllers
 
             Dictionary<string, string> tempDict = result.ToStringDictionary();
 
-            List<string> tempList = new List<string>();
-            foreach (var obj in tempDict.Values)
-            {
-
-            }
-
             foreach (var obj in tempDict.Keys)
             {
-                //List<string> tempList = tempDict.
-
-                //newM.keyValueComments. = obj;
+                string[] temp = null;
+                foreach (var obj1 in tempDict.Values)
+                {
+                    temp = obj1.Split("| ");
+                    if (temp == null)
+                        temp.Append(obj1);
+                }
+                newM.keyValueComments.Add(obj, temp);
             }
 
             return View("Details", newM);

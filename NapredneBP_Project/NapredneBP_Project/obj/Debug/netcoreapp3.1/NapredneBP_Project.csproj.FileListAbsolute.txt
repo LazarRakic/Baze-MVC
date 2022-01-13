@@ -518,3 +518,5 @@ E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\Napr
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\User\Login.cshtml.g.cs
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Recommended.cshtml.g.cs
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\AddComment.cshtml.g.cs
+D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\AddComment.cshtml.g.cs
+D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Recommended.cshtml.g.cs

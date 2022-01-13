@@ -95,9 +95,13 @@
                     <ul>
                         @if (Model.keyValueComments != null)
                         {
-                            @foreach (var obj in Model.keyValueComments.Values)
+                            @foreach (var obj in Model.keyValueComments)
                             {
-                                <li>@obj</li>
+                                <h5>@obj.Key</h5>
+                                foreach (var obj1 in obj.Value)
+                                {
+                                    <li>@obj1</li>
+                                }
                             }
                         }
                     </ul>

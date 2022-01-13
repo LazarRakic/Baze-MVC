@@ -26,6 +26,11 @@ namespace NapredneBP_Project.Models
 
         public String Comment { get; set; }
 
-        public Dictionary<string, List<string>> keyValueComments { get; set; }
+        public Dictionary<string, string[]> keyValueComments { get; set; }
+
+        public MovieDTO()
+        {
+            keyValueComments = new Dictionary<string, string[]>();
+        }
     }
 }
