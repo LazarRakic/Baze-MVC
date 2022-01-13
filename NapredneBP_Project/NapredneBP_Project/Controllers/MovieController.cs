@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using StackExchange.Redis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace NapredneBP_Project.Controllers
 {
@@ -80,55 +81,35 @@ namespace NapredneBP_Project.Controllers
         [Route("GetMovieById/{id}")]
         public async Task<IActionResult> GetMovieById(Guid id)
         {
-            var movieRedis = _redisService.Get(id.ToString());
-
+            var movieRedis = _redisService.Get(HttpContext.Session.GetString("activeUser"));
+            var temp = false;
             if (movieRedis.Result != null)
             {
-                MovieDTO m = JsonSerializer.Deserialize<MovieDTO>(movieRedis.Result);
+                foreach (var obj in movieRedis.Result)
+                {
+                    MovieDTO m = JsonSerializer.Deserialize<MovieDTO>(obj);
+                    if (m.Id == id)
+                    {
+                        System.Diagnostics.Debug.WriteLine("DONE BY REDIS!!!");
 
-                System.Diagnostics.Debug.WriteLine("DONE BY REDIS!!!");
+                        return View("Details", m);
+                    }
+                }
+                MovieDTO a = await NewMethod(id);
 
-                return View("Details", m);
+                var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                            .Where((Movie m) => m.Title == a.Title)
+                                            .ReturnDistinct(m => m.Labels()).ResultsAsync;
+
+                a.Labels = (IEnumerable<string>)movieLabels.First();
+
+                await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
+
+                return View("Details", a);
             }
             else
             {
-                MovieDTO a = new MovieDTO();
-
-                var movie0 = await _client.Cypher.Match("(m:Movie)")
-                                                 .Where((Movie m) => m.Id == id)
-                                                 .Return((m) => new { film = m.As<Movie>() }).ResultsAsync;
-
-                var movie1 = await _client.Cypher.Match("(m:Movie)<-[rel:Directed_by]-(p:Person)")
-                                                 .Where((Movie m) => m.Id == id)
-                                                 .Return((m, p) => new {
-                                                      film = m.As<Movie>(),
-                                                      directors = p.CollectAs<Person>()}).ResultsAsync;
-
-                var movie2 = await _client.Cypher.Match("(m:Movie)<-[rel:Acted_in]-(p:Person)")
-                                                 .Where((Movie m) => m.Id == id)
-                                                 .Return((m, p) => new {
-                                                      film = m.As<Movie>(),
-                                                      actors = p.CollectAs<Person>()}).ResultsAsync;
-
-                foreach (var item in movie0)
-                {
-                    a.Id = item.film.Id;
-                    a.Title = item.film.Title;
-                    a.Description = item.film.Description;
-                    a.ImageUri = item.film.ImageUri;
-                    a.PublishingDate = item.film.PublishingDate;
-                    a.Rate = item.film.Rate;
-                }
-
-                foreach (var obj in movie1)
-                {
-                    a.ListOfDirectors = obj.directors;
-                }
-
-                foreach (var obj in movie2)
-                {
-                    a.ListOfActors = obj.actors;
-                }
+                MovieDTO a = await NewMethod(id);
 
 
                 var movieLabels = await _client.Cypher.Match("(m:Movie)")
@@ -137,12 +118,59 @@ namespace NapredneBP_Project.Controllers
 
                 a.Labels = (IEnumerable<string>)movieLabels.First();
 
-                await _redisService.Set(a.Id.ToString(), JsonSerializer.Serialize(a));
+                await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
 
                 return View("Details", a);
             }
 
             
+        }
+
+        private async Task<MovieDTO> NewMethod(Guid id)
+        {
+            MovieDTO a = new MovieDTO();
+
+            var movie0 = await _client.Cypher.Match("(m:Movie)")
+                                             .Where((Movie m) => m.Id == id)
+                                             .Return((m) => new { film = m.As<Movie>() }).ResultsAsync;
+
+            var movie1 = await _client.Cypher.Match("(m:Movie)<-[rel:Directed_by]-(p:Person)")
+                                             .Where((Movie m) => m.Id == id)
+                                             .Return((m, p) => new
+                                             {
+                                                 film = m.As<Movie>(),
+                                                 directors = p.CollectAs<Person>()
+                                             }).ResultsAsync;
+
+            var movie2 = await _client.Cypher.Match("(m:Movie)<-[rel:Acted_in]-(p:Person)")
+                                             .Where((Movie m) => m.Id == id)
+                                             .Return((m, p) => new
+                                             {
+                                                 film = m.As<Movie>(),
+                                                 actors = p.CollectAs<Person>()
+                                             }).ResultsAsync;
+
+            foreach (var item in movie0)
+            {
+                a.Id = item.film.Id;
+                a.Title = item.film.Title;
+                a.Description = item.film.Description;
+                a.ImageUri = item.film.ImageUri;
+                a.PublishingDate = item.film.PublishingDate;
+                a.Rate = item.film.Rate;
+            }
+
+            foreach (var obj in movie1)
+            {
+                a.ListOfDirectors = obj.directors;
+            }
+
+            foreach (var obj in movie2)
+            {
+                a.ListOfActors = obj.actors;
+            }
+
+            return a;
         }
 
         [HttpGet]
@@ -220,7 +248,6 @@ namespace NapredneBP_Project.Controllers
             return View("AllMovies", ListofMovies);
         }*/
 
-
         public async Task<IEnumerable<string>> GetAllLabelsForMovie(string title)
         {
             var movieLabels = await _client.Cypher.Match("(m:Movie)")
@@ -243,10 +270,10 @@ namespace NapredneBP_Project.Controllers
 
         [HttpPost]
         [Route("SetLabelForMovie/{title}/{label}")]
-        public async Task<IActionResult> GetAllLabels(string title, string label)
+        public async Task<IActionResult> SetLabels(string title, string label)
         {
             var movieLabels = await _client.Cypher.Match("(m:Movie)")
-                                                  .Where((Movie m) => m.Title == title)
+                                                  .Where((Movie m) =>  m.Title == title)
                                                   .Set("m:" + label + "")
                                                   .ReturnDistinct(m => m.Labels()).ResultsAsync;
             return Ok(movieLabels);
@@ -266,5 +293,85 @@ namespace NapredneBP_Project.Controllers
             IEnumerable<Movie> ListofMovies = movies;
             return View(ListofMovies);
         }*/
+
+        public async Task<IActionResult> Recommended()
+        {
+            var allMovies = _redisService.Get(HttpContext.Session.GetString("activeUser"));
+            List<MovieDTO> movieDTOs = new List<MovieDTO>();
+            List<Movie> moviesToShow = new List<Movie>();
+            List<string> genres = new List<string>();
+            foreach(var obj in allMovies.Result)
+            {
+                movieDTOs.Add(JsonSerializer.Deserialize<MovieDTO>(obj));
+            }
+
+            foreach(var obj in movieDTOs)
+            {
+                foreach(var obj1 in obj.Labels)
+                {
+                    if (!genres.Contains(obj1))
+                        genres.Add(obj1);
+                }
+            }
+
+            genres.Remove("Movie");
+
+            var movies = await _client.Cypher.Match("(m:Movie)")
+                                             .Return(m => m.As<Movie>()).ResultsAsync;
+
+            foreach (var obj in movies)
+            {
+                var movieLabels = await _client.Cypher.Match("(m:Movie)")
+                                                      .Where((Movie m) => m.Title == obj.Title)
+                                                      .ReturnDistinct(m => m.Labels()).ResultsAsync;
+                foreach(var obj1 in movieLabels.First())
+                {
+                    if(genres.Contains(obj1))
+                    {
+                        if(!moviesToShow.Contains(obj))
+                        {
+                            moviesToShow.Add(obj);
+                        }
+                        
+                    }
+                }
+            }
+
+            return View(moviesToShow);
+        }
+
+        public async Task<IActionResult> AC(Guid id)
+        {
+            MovieDTO m = new MovieDTO()
+            {
+                Id = id
+            };
+            return View("AddComment", m);
+        }
+
+        public async Task<IActionResult> AddComment(MovieDTO m)
+        {
+            MovieDTO newM = await NewMethod(m.Id);
+            await _redisService.SetComments(m.Id.ToString(), HttpContext.Session.GetString("activeUser"), m.Comment);
+
+            var result = await _redisService.GetCommentsForMovie(m.Id.ToString());
+
+            Dictionary<string, string> tempDict = result.ToStringDictionary();
+
+            List<string> tempList = new List<string>();
+            foreach (var obj in tempDict.Values)
+            {
+
+            }
+
+            foreach (var obj in tempDict.Keys)
+            {
+                //List<string> tempList = tempDict.
+
+                //newM.keyValueComments. = obj;
+            }
+
+            return View("Details", newM);
+        }
     }
 }

@@ -24,9 +24,8 @@ namespace NapredneBP_Project.Models
 
         public IEnumerable<string> Labels { get; set; }
 
-        //public MovieDTO()
-        //{
-        //    Labels = new List<string>();
-        //}
+        public String Comment { get; set; }
+
+        public Dictionary<string, List<string>> keyValueComments { get; set; }
     }
 }

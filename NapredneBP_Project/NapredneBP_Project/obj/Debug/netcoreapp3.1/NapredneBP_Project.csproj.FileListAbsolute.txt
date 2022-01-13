@@ -116,7 +116,6 @@ E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\Napr
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.TagHelpers.input.cache
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.TagHelpers.output.cache
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\NapredneBP_Project.RazorCoreGenerate.cache
-E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\AllMovies.cshtml.g.cs
 E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
@@ -506,3 +505,16 @@ D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_P
 D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Options.dll
 D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 D:\7. semestar\Napredne baze podataka\neo i redis projekat\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Memory.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Options.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\User\Create.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\User\Index1.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\User\Login.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\Recommended.cshtml.g.cs
+E:\Lazar\Elfak\4. godina\Napredne baze podataka\Baze-MVC\NapredneBP_Project\NapredneBP_Project\obj\Debug\netcoreapp3.1\Razor\Views\Movie\AddComment.cshtml.g.cs

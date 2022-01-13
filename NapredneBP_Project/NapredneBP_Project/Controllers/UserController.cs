@@ -71,6 +71,7 @@ namespace NapredneBP_Project.Controllers
         {
             var value = HttpContext.Session.GetString("activeUser");
             await _redisService.DeleteUser(value);
+            await _redisService.DeleteMovies(value);
             return View("Index");
         }
 

@@ -1,0 +1,12 @@
+﻿@model NapredneBP_Project.Models.MovieDTO
+
+
+<form method="get" asp-action="AddComment" asp-controller="Movie">
+    <input asp-for="Id" hidden />
+    <div class="form-group">
+        <input asp-for="@Model.Comment" placeholder="Add comment" />
+        <span asp-validation-for="@Model.Comment"></span>
+        <button class="btn btn-primary" type="submit">Add comment</button>
+    </div>
+
+</form>

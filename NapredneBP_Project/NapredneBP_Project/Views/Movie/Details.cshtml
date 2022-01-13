@@ -71,23 +71,41 @@
                 </ul>
             </div>
             <br />
-
-        </div>
-        <div style="margin-left: 150px; position:relative;">
             <div>
-                <h3>Directed by</h3>
-                <br />
-                <ul>
-                    @if (Model.ListOfDirectors != null)
-                    {
-                        @foreach (var obj in Model.ListOfDirectors)
+                <div>
+                    <h3>Directed by</h3>
+                    <br />
+                    <ul>
+                        @if (Model.ListOfDirectors != null)
                         {
-                            <li>@obj.Name</li>
+                            @foreach (var obj in Model.ListOfDirectors)
+                            {
+                                <li>@obj.Name</li>
+                            }
                         }
-                    }
-                </ul>
+                    </ul>
+                </div>
+
+            </div>
+            <br />
+            <div>
+                <div>
+                    <h3>Comments</h3>
+                    <br />
+                    <ul>
+                        @if (Model.keyValueComments != null)
+                        {
+                            @foreach (var obj in Model.keyValueComments.Values)
+                            {
+                                <li>@obj</li>
+                            }
+                        }
+                    </ul>
+                </div>
+
             </div>
 
         </div>
+        
     </div>
 </div>

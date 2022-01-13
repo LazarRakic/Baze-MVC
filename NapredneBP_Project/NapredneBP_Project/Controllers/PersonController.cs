@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using NapredneBP_Project.Models;
 using Neo4jClient;
 using System;
@@ -180,7 +181,6 @@ namespace NapredneBP_Project.Controllers
             var rel = await _client.Cypher.Match("(p:Person), (m:Movie)")
                                 .Where((Person p, Movie m) => p.Name == relationship.PersonName && m.Title == relationship.MovieName)
                                 .Create("(p)-[r:" + relationship.Name + "]->(m)")
-                                //.WithParam("relation", relationship1)
                                 .Return(m => m.As<Movie>())
                                 .ResultsAsync;
             var result = _redisService.Get(rel.First().Id.ToString());
@@ -214,6 +214,7 @@ namespace NapredneBP_Project.Controllers
                     a.ImageUri = item.film.ImageUri;
                     a.PublishingDate = item.film.PublishingDate;
                     a.Rate = item.film.Rate;
+                    //a.AddedBy = HttpContext.Session.GetString("activeUser");
                 }
 
                 foreach (var obj in movie1)
@@ -232,7 +233,7 @@ namespace NapredneBP_Project.Controllers
 
                 a.Labels = (IEnumerable<string>)movieLabels.First();
 
-                await _redisService.Set(a.Id.ToString(), JsonSerializer.Serialize(a));
+                await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
             }
             
             return RedirectToAction("GetAllPersons");
