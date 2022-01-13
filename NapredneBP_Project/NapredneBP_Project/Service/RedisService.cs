@@ -39,5 +39,28 @@ namespace NapredneBP_Project
 
             return value;
         }
+
+        public async Task AddUser(string value)
+        {
+            var result = await _redis.GetDatabase().ListLeftPushAsync("allusers", value);
+        }
+
+        public async Task<RedisValue[]> GetAllUser()
+        {
+            long value = _redis.GetDatabase().ListLength("allusers");
+            var users = await _redis.GetDatabase().ListRangeAsync("allusers", 0, value - 1);
+
+            return users;
+        }
+
+        public async Task DeleteUser(string value)
+        {
+            RedisValue[] result = await GetAllUser();
+            foreach(var obj in result)
+            {
+                if (obj == value)
+                    await _redis.GetDatabase().ListRemoveAsync("allusers", value, 0);
+            }
+        }
     }
 }

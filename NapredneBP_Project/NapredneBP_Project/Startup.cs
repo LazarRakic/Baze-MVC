@@ -31,6 +31,9 @@ namespace NapredneBP_Project
             client.ConnectAsync();
             services.AddSingleton<IGraphClient>(client);
             services.AddSingleton<RedisService>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,11 +58,13 @@ namespace NapredneBP_Project
 
             redisService.Connect();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Index}");
             });
         }
     }

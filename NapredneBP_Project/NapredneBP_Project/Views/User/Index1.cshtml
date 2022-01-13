@@ -2,9 +2,16 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="text-center">
     <h1 class="display-4">Welcome to IMDB <i>Clone</i></h1>
     <p class="text-muted h4">Your favorite movies all in one place</p>
+</div>
+
+<br />
+
+<div class="text-center">
+    <h3>@Html.ActionLink("Logout", "Logout", "User")</h3>
 </div>
 
 <br />
@@ -17,6 +24,12 @@
 
 <div class="text-center">
     <h3>@Html.ActionLink("Create new movie", "Index", "Movie")</h3>
+</div>
+
+<br />
+
+<div class="text-center">
+    <h3>@Html.ActionLink("Search movies", "GMBT", "Movie")</h3>
 </div>
 
 <br />
