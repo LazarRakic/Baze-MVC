@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NapredneBP_Project.Models;
 using Neo4jClient;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -214,7 +215,6 @@ namespace NapredneBP_Project.Controllers
                     a.ImageUri = item.film.ImageUri;
                     a.PublishingDate = item.film.PublishingDate;
                     a.Rate = item.film.Rate;
-                    //a.AddedBy = HttpContext.Session.GetString("activeUser");
                 }
 
                 foreach (var obj in movie1)
@@ -233,6 +233,22 @@ namespace NapredneBP_Project.Controllers
 
                 a.Labels = (IEnumerable<string>)movieLabels.First();
 
+                var res = await _redisService.GetCommentsForMovie(a.Id.ToString());
+
+                Dictionary<string, string> tempDict = res.ToStringDictionary();
+
+                foreach (var obj in tempDict.Keys)
+                {
+                    string[] temp = null;
+                    string value;
+                    if (tempDict.TryGetValue(obj, out value))
+                    {
+                        temp = value.Split("| ");
+                        if (temp == null)
+                            temp.Append(value);
+                    }
+                    a.keyValueComments.Add(obj, temp);
+                }
                 await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
             }
             

@@ -1,7 +1,7 @@
 ﻿@model NapredneBP_Project.Models.Movie
 
 
-<form method="get" asp-action="AddComment" asp-controller="Movie" >
+<form method="get" asp-action="GetMovieByTitle" asp-controller="Movie" >
     <div class="form-group">
         <input asp-for="@Model.Title" placeholder="Search" />
         <span asp-validation-for="@Model.Title"></span>

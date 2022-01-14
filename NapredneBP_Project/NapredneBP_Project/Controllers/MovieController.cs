@@ -82,7 +82,6 @@ namespace NapredneBP_Project.Controllers
         public async Task<IActionResult> GetMovieById(Guid id)
         {
             var movieRedis = _redisService.Get(HttpContext.Session.GetString("activeUser"));
-            var temp = false;
             if (movieRedis.Result != null)
             {
                 foreach (var obj in movieRedis.Result)
@@ -95,7 +94,7 @@ namespace NapredneBP_Project.Controllers
                         return View("Details", m);
                     }
                 }
-                MovieDTO a = await NewMethod(id);
+                MovieDTO a = await GetRelations(id);
 
                 var movieLabels = await _client.Cypher.Match("(m:Movie)")
                                             .Where((Movie m) => m.Title == a.Title)
@@ -103,13 +102,13 @@ namespace NapredneBP_Project.Controllers
 
                 a.Labels = (IEnumerable<string>)movieLabels.First();
 
-                await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
+                a = await GetComments(a);
 
                 return View("Details", a);
             }
             else
             {
-                MovieDTO a = await NewMethod(id);
+                MovieDTO a = await GetRelations(id);
 
 
                 var movieLabels = await _client.Cypher.Match("(m:Movie)")
@@ -118,15 +117,15 @@ namespace NapredneBP_Project.Controllers
 
                 a.Labels = (IEnumerable<string>)movieLabels.First();
 
+                a = await GetComments(a);
+
                 await _redisService.Set(HttpContext.Session.GetString("activeUser"), JsonSerializer.Serialize(a));
 
                 return View("Details", a);
             }
-
-            
         }
 
-        private async Task<MovieDTO> NewMethod(Guid id)
+        private async Task<MovieDTO> GetRelations(Guid id)
         {
             MovieDTO a = new MovieDTO();
 
@@ -351,26 +350,32 @@ namespace NapredneBP_Project.Controllers
 
         public async Task<IActionResult> AddComment(MovieDTO m)
         {
-            MovieDTO newM = await NewMethod(m.Id);
+            MovieDTO newM = await GetRelations(m.Id);
             await _redisService.SetComments(m.Id.ToString(), HttpContext.Session.GetString("activeUser"), m.Comment);
+            newM = await GetComments(newM);
 
-            var result = await _redisService.GetCommentsForMovie(m.Id.ToString());
+            return View("Details", newM);
+        }
+
+        private async Task<MovieDTO> GetComments(MovieDTO newM)
+        {
+            var result = await _redisService.GetCommentsForMovie(newM.Id.ToString());
 
             Dictionary<string, string> tempDict = result.ToStringDictionary();
 
             foreach (var obj in tempDict.Keys)
             {
                 string[] temp = null;
-                foreach (var obj1 in tempDict.Values)
+                string value;
+                if(tempDict.TryGetValue(obj, out value))
                 {
-                    temp = obj1.Split("| ");
+                    temp = value.Split("| ");
                     if (temp == null)
-                        temp.Append(obj1);
+                        temp.Append(value);
                 }
                 newM.keyValueComments.Add(obj, temp);
             }
-
-            return View("Details", newM);
+            return newM;
         }
     }
 }

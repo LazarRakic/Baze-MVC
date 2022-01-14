@@ -37,9 +37,15 @@ namespace NapredneBP_Project
         public async Task<RedisValue[]> Get(string key)
         {
             long value = _redis.GetDatabase().ListLength(key);
-            var allMovies = await _redis.GetDatabase().ListRangeAsync(key, 0, value - 1);
 
-            return allMovies;
+            if (value != 0)
+            {
+                var allMovies = await _redis.GetDatabase().ListRangeAsync(key, 0, value - 1);
+
+                return allMovies;
+            }
+            else return null;
+            
         }
         public async Task DeleteMovies(string usr)
         {
@@ -78,10 +84,9 @@ namespace NapredneBP_Project
             var res = await GetComments(key, usr);
             if (!res.IsNull)
             {
-                var result = _redis.GetDatabase().HashSetAsync(key, usr, res + "| " + comment + "~" + DateTime.Now);
+                var result = _redis.GetDatabase().HashSetAsync(key, usr, res + "| " + comment); // + "~" + DateTime.Now
             }
-            else { var result = _redis.GetDatabase().HashSetAsync(key, usr, comment + "~" + DateTime.Now); }
-
+            else { var result = _redis.GetDatabase().HashSetAsync(key, usr, comment); } // + "~" + DateTime.Now
         }
 
         public async Task<RedisValue> GetComments(string key, string usr)
@@ -95,7 +100,6 @@ namespace NapredneBP_Project
         public async Task<HashEntry[]> GetCommentsForMovie(string key)
         {
             var result = await _redis.GetDatabase().HashGetAllAsync(key);
-
             return result;
         }
 
